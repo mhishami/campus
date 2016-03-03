@@ -1,0 +1,19 @@
+{application, 'campus',
+ [{description, "An OTP application"},
+  {vsn, "0.1.0"},
+  {registered, []},
+  {mod, {'campus_app', []}},
+  {applications,
+   [kernel,
+    stdlib,
+    cowboy,
+    cowlib,
+    ranch
+   ]},
+  {env,[]},
+  {modules, []},
+
+  {contributors, []},
+  {licenses, []},
+  {links, []}
+ ]}.

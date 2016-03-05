@@ -22,30 +22,40 @@ export default {
         'Content-Type': 'application/json'
       }]
     }]
-    context.$http.get(STUDENTS_URL, uid, options).then((resp) => {
-      console.log('API: \'' + JSON.stringify(resp.data) + '\'')
-      return resp.data
+    context.$http.get(STUDENTS_URL + '/' + uid, options).then((resp) => {
+      context.user = resp.data
+
+      if (JSON.stringify(resp.data) !== '[]') {
+        context.no_user = false
+        context.can_add = false
+      } else {
+        context.no_user = true
+        context.can_add = true
+      }
     }).catch((err) => {
       context.error = err
     })
   },
 
-  setUser (context, user) {
-    console.log('User: ' + JSON.stringify(user))
+  addUser (context, uid, user) {
+    // console.log('User: ' + JSON.stringify(user))
     var options = [{
       method: 'POST',
       headers: [{
         'Access-Control-Request-Method': 'POST',
-        'Access-Control-Request-Headers': 'X-Requested-With',
+        'Access-Control-Request-Headers': 'accept, authorization, crossorigin',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
       }]
     }]
+    console.log('Sending the post request...')
+    user.card_uid = uid
     context.$http.post(STUDENTS_URL, user, options).then((resp) => {
-      console.log('Response: ' + resp.data)
-      return resp.data
-    }).catch((err) => {
-      context.error = err
+      // console.log('Response: ' + resp.data)
+      context.result = resp.data
     })
+    // context.user = {}
+    // context.can_add = false
   }
 
 }

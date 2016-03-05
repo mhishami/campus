@@ -3,13 +3,14 @@
   <div class="ui raised segment">
     <a class="ui blue ribbon label">Profile</a>
     <br/><br/>
-
+<!--
     <div>
       <pre>
         {{ $data | json }}
       </pre>
     </div>
-    <div class="ui icon error message" v-show="error">
+ -->
+    <div class="ui icon error message" v-show="no_user">
       <i class="warning circle icon"></i>
       <div class="content">
         <div class="header">
@@ -70,8 +71,7 @@
           </div>
         </div>
       </div>
-      <input id="card_uid" name="card_uid" type="hidden" v-model="user.card_uid" />
-      <div id="add-student" class="ui green submit button" v-show="error" v-on:click="addUser">Add Student</div>
+      <div id="add-student" class="ui green submit button" v-show="can_add" v-on:click="addUser">Add Student</div>
     </form>
   </div>
 </template>
@@ -89,7 +89,10 @@ export default {
   data () {
     return {
       uid: null,
-      error: null,
+      no_user: null,
+      can_add: null,
+      result: null,
+
       user: {
         first: '',
         last: '',
@@ -107,15 +110,16 @@ export default {
   events: {
     'uid': function (msg) {
       this.uid = msg
-      console.log('Preparing to get UID details for ' + this.uid)
-      console.log('User: ' + api.getUser(this, this.uid))
+      api.getUser(this, this.uid)
     }
   },
 
   methods: {
     addUser () {
-      // adding user
-      api.setUser(this, this.user)
+      this.can_add = false
+      this.no_user = false
+      api.addUser(this, this.uid, this.user)
+      this.user = {}
     }
   }
 

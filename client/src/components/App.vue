@@ -32,7 +32,7 @@ export default {
     var self = this
     ws.onmessage = function (evt) {
       if (evt.data !== 'READ') {
-        console.log('Evt: ' + evt.data)
+        console.log('App: Evt Data: ' + evt.data)
         self.uid = evt.data.split(' ').join('')
         self.$broadcast('uid', self.uid)
       }

@@ -31,7 +31,16 @@ start(_StartType, _StartArgs) ->
     ]}
   ]),
   {ok, _} = cowboy:start_http(http, 100, [{port, 3000}], [
-    {env, [{dispatch, Dispatch}]}
+    {env, [
+      {dispatch, Dispatch},
+      {cors_policy, api_policy}
+    ]},
+    {middlewares, [
+      cowboy_router,
+      cowboy_cors,
+      cowboy_handler
+    ]}
+    % {onresponse, fun api_handler:cors_hook/4}
   ]),
   'campus_sup':start_link().
 

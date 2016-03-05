@@ -1,13 +1,20 @@
 -module (student_model).
 -include ("campus.hrl").
 
--export ([new/9,
+-export ([new/0,
+          new/9,
           parse_req/1,
           save/1,
           find/1,
           ensure_index/0]).
 
 -define (DB, <<"students">>).
+
+new() ->
+  #{<<"_id">> => uuid:gen(),
+    <<"balances">> => 0.0,
+    <<"created_at">> => os:timestamp(),
+    <<"updated_at">> => os:timestamp()}.
 
 new(Uid, FirstName, LastName, Address1, Address2, City, Postcode, IdNum, StudentNum) ->
   #{<<"_id">> => uuid:gen(),

@@ -1,34 +1,43 @@
 
 <template>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-      <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" v-link="{ path: '/home' }">Campus App</a>
-      </div>
-      <div class="navbar-collapse collapse">
-        <ul class="nav navbar-nav">
-          <li v-link-active><a v-link="{ path: '/home', activeClass: 'active', exact: true }">Home</a></li>
-          <li v-link-active><a v-link="{ path: '/checkin', activeClass: 'active', exact: true }">Checkin</a></li>
-          <li v-link-active><a v-link="{ path: '/cafe', activeClass: 'active', exact: true }">Cafe</a></li>
-        </ul>
-      </div><!--/.nav-collapse -->
-    </div><!--/.container-fluid -->
-  </nav>      
-  <div class="container">
-    <router-view></router-view>
+  <div class="ui inverted attached fixed menu">
+    <div class="ui container">
+      <a class="active item" v-link="{ path: '/home', activeClass: 'active' }"><i class="home icon"></i> Home</a>
+      <a class="item" v-link="{ path: '/checkin', activeClass: 'active' }">Checkin</a>
+      <a class="item" v-link="{ path: '/cafe', activeClass: 'active' }">Cafe</a>
+    </div>
+  </div>
+  <div class="pusher">
+    <br/><br/><br/>
+    <div class="ui container segment">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
-<style>
-  body {
-    min-height: 2000px;
-    padding-top: 70px;
+<script>
+// init out websocket here
+const WS_LOC = 'ws://localhost:3000/ws'
+const ws = new window.WebSocket(WS_LOC)
+
+export default {
+
+  data () {
+    return {
+      uid: null
+    }
+  },
+
+  ready () {
+    var self = this
+    ws.onmessage = function (evt) {
+      if (evt.data !== 'READ') {
+        console.log('Evt: ' + evt.data)
+        self.uid = evt.data.split(' ').join('')
+        self.$broadcast('uid', self.uid)
+      }
+    }
   }
-  .v-link-active { color: red; }
-</style>
+}
+
+</script>

@@ -4,8 +4,8 @@
 %%%-------------------------------------------------------------------
 
 -module('campus_sup').
-
 -behaviour(supervisor).
+-include ("campus.hrl").
 
 %% API
 -export([start_link/0]).
@@ -20,7 +20,7 @@
 %%====================================================================
 
 start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+  supervisor:start_link({local, ?SERVER}, ?MODULE, []).
 
 %%====================================================================
 %% Supervisor callbacks
@@ -28,7 +28,17 @@ start_link() ->
 
 %% Child :: {Id,StartFunc,Restart,Shutdown,Type,Modules}
 init([]) ->
-    {ok, { {one_for_all, 0, 1}, []} }.
+  Serial = ?CHILD(serial_worker, worker),
+
+  %% our mongo pool
+  %% get configs
+  {ok, [{PoolName, SizeArgs, WorkerArgs}]} = application:get_env(campus, pools),
+  PoolArgs = [{name, {local, PoolName}}, {worker_module, mc_worker}] ++ SizeArgs,
+  PoolSpecs = poolboy:child_spec(PoolName, PoolArgs, WorkerArgs),
+
+  Mongo = ?CHILD(mongo_worker, worker, [PoolName]),
+
+  {ok, { {one_for_all, 0, 1}, [Serial, Mongo, PoolSpecs]} }.
 
 %%====================================================================
 %% Internal functions

@@ -1,18 +1,34 @@
 {application, 'campus',
- [{description, "An OTP application"},
+ [{description, "Campus Application"},
   {vsn, "0.1.0"},
   {registered, []},
   {mod, {'campus_app', []}},
   {applications,
    [kernel,
     stdlib,
+    sasl,
     cowboy,
     cowlib,
-    ranch
+    ranch,
+    sync,
+    lager
    ]},
-  {env,[]},
+  {env,[
+    {pools, [
+      {campus, [
+      {size, 10},
+      {max_overflow, 30}
+    ], [
+      {database, <<"campus">>},
+      {w_mode, safe}
+      ]}
+    ]},
+    {serial, [
+      {device, "/dev/cu.usbmodem1411"},
+      {speed, b115200}
+    ]}
+  ]},
   {modules, []},
-
   {contributors, []},
   {licenses, []},
   {links, []}

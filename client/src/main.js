@@ -27,4 +27,5 @@ router.redirect({
   '*': '/home'
 })
 
+// Vue.config.debug = true
 router.start(App, '#app')

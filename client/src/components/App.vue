@@ -5,6 +5,7 @@
       <a class="active item" v-link="{ path: '/home', activeClass: 'active' }"><i class="home icon"></i> Home</a>
       <a class="item" v-link="{ path: '/checkin', activeClass: 'active' }">Checkin</a>
       <a class="item" v-link="{ path: '/cafe', activeClass: 'active' }">Cafe</a>
+      <a class="item" v-link="{ path: '/reload', activeClass: 'active' }">Reload</a>
     </div>
   </div>
   <div class="pusher">

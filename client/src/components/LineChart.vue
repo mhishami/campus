@@ -1,11 +1,11 @@
 <template>
-  <chartist
-    id-chart="ct-chart"
-    ratio="ct-major-second"
-    type="Line"
-    :data="chartData"
-    :options="chartOptions" >
-  </chartist>
+      <chartist
+        id-chart="ct-chart"
+        ratio="ct-major-second"
+        type="Line"
+        :data="chartData"
+        :options="chartOptions" >
+      </chartist>
 </template>
 
 <script>

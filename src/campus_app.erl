@@ -26,7 +26,7 @@ start(_StartType, _StartArgs) ->
       {"/", cowboy_static, {priv_file, campus, "dist/index.html"}},
       {"/api/[...]", api_handler, []},
       {"/ws", ws_handler, []},
-      {"/static/[...]", cowboy_static, {priv_dir, campus, "dist",
+      {"/static/[...]", cowboy_static, {priv_dir, campus, "dist/static",
         [{mimetypes, cow_mimetypes, all}]}}
     ]}
   ]),

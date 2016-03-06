@@ -1,5 +1,6 @@
 <template>
-  <div class="ui grid">
+  <checkin-menu></checkin-menu>
+  <div class="ui grid middle align stackable container">
     <div class="six wide column">
       <div class="ui icon info message" v-show="notice">
         <i class="notched circle loading icon"></i>
@@ -10,7 +11,7 @@
           <p>We're fetching the info for you</p>
         </div>
       </div>
-      <div class="ui statistic">
+      <div class="ui statistic" v-show="uid">
         <div class="value">
           {{ uid }}
         </div>
@@ -27,7 +28,7 @@
 
 <script>
 import UserView from './UserView.vue'
-import Message from './Message.vue'
+import CheckinMenu from './CheckinMenu.vue'
 
 export default {
 
@@ -51,7 +52,7 @@ export default {
 
   components: {
     UserView,
-    Message
+    CheckinMenu
   }
 }
 

@@ -6,17 +6,12 @@
       <a class="item" v-link="{ path: '/checkin', activeClass: 'active' }">Checkin</a>
       <a class="item" v-link="{ path: '/cafe', activeClass: 'active' }">Cafe</a>
       <a class="item" v-link="{ path: '/reload', activeClass: 'active' }">Reload</a>
+      <div class="right menu">
+        <button class="ui button inverted" v-link="{ path: '/login', activeClass: 'active' }">Login</button>
+      </div>
     </div>
   </div>
   <router-view></router-view>
-<!--
-  <div class="pusher">
-    <br/><br/><br/>
-    <div class="ui container segment">
-      <router-view></router-view>
-    </div>
-  </div>
- -->
 </template>
 
 <script>
@@ -47,8 +42,7 @@ export default {
 </script>
 
 <style>
-.pusher .container {
-  margin-top: 70px;
-}
+.menu { padding-top: 5px; padding-bottom: 5px; }
+.pusher .container { margin-top: 70px; }
 </style>
 

@@ -9,6 +9,8 @@ import CafeCheckout from './components/CafeCheckout.vue'
 import CafeCheckoutDone from './components/CafeCheckoutDone.vue'
 import ReloadCard from './components/ReloadCard.vue'
 
+import Login from './components/Login.vue'
+
 import VueRouter from 'vue-router'
 import VueResource from 'vue-resource'
 
@@ -39,6 +41,9 @@ router.map({
   },
   '/reload': {
     component: ReloadCard
+  },
+  '/login': {
+    component: Login
   }
 })
 

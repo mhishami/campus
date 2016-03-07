@@ -3,6 +3,7 @@ import {router} from '../main'
 
 const API_LOC = 'http://localhost:3000/api'
 const STUDENTS_URL = API_LOC + '/students'
+const AUTH_URL = API_LOC + '/auth'
 
 export default {
 
@@ -14,16 +15,28 @@ export default {
     router.go(location)
   },
 
-  getUser (context, uid) {
-    var options = [{
-      method: 'GET',
+  options (opt) {
+    return [{
+      method: opt,
       headers: [{
-        'Access-Control-Request-Method': 'GET',
-        'Access-Control-Request-Headers': 'X-Requested-With',
+        'Access-Control-Request-Method': opt,
+        'Access-Control-Request-Headers': 'accept, authorization, crossorigin',
+        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json'
       }]
     }]
-    context.$http.get(STUDENTS_URL + '/' + uid, options).then((resp) => {
+  },
+
+  authenticate (context, user) {
+    context.$http.get(AUTH_URL, this.options('GET')).then((resp) => {
+      context.user = resp.data
+    }).catch((error) => {
+      context.error = error
+    })
+  },
+
+  getUser (context, uid) {
+    context.$http.get(STUDENTS_URL + '/' + uid, this.options('GET')).then((resp) => {
       context.user = resp.data
 
       if (JSON.stringify(resp.data) !== '[]') {
@@ -40,35 +53,17 @@ export default {
 
   addUser (context, uid, user) {
     // console.log('User: ' + JSON.stringify(user))
-    var options = [{
-      method: 'POST',
-      headers: [{
-        'Access-Control-Request-Method': 'POST',
-        'Access-Control-Request-Headers': 'accept, authorization, crossorigin',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      }]
-    }]
     console.log('Sending the post request...')
     user.card_uid = uid
-    context.$http.post(STUDENTS_URL, user, options).then((resp) => {
+    context.$http.post(STUDENTS_URL, user, this.options('POST')).then((resp) => {
       // console.log('Response: ' + resp.data)
       context.result = resp.data
     })
   },
 
   updateUser (context, user) {
-    var options = [{
-      method: 'PUT',
-      headers: [{
-        'Access-Control-Request-Method': 'PUT',
-        'Access-Control-Request-Headers': 'accept, authorization, crossorigin',
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      }]
-    }]
     console.log('Sending the PUT request. User: ' + JSON.stringify(user))
-    context.$http.put(STUDENTS_URL, user, options).then((resp) => {
+    context.$http.put(STUDENTS_URL, user, this.options('PUT')).then((resp) => {
       console.log('Response: ' + resp.data)
       context.result = resp.data
     }).catch((error) => {

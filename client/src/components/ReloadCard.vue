@@ -75,7 +75,6 @@
 
 <script>
 import api from '../api'
-import {router} from '../main'
 
 export default {
   data () {
@@ -100,8 +99,7 @@ export default {
       console.log('Reloading user balance...')
       this.user.balances += Number.parseFloat(this.amount + '.0')
       api.updateUser(this, this.user)
-
-      router.go('/home')
+      api.go('/home')
     }
   }
 

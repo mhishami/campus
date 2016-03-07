@@ -131,7 +131,6 @@
 
 <script>
 import api from '../api'
-import {router} from '../main'
 
 export default {
   data () {
@@ -175,7 +174,7 @@ export default {
 
   methods: {
     reloadCard () {
-      router.go('/reload')
+      api.go('/reload')
     },
 
     proceedPayment () {
@@ -184,7 +183,7 @@ export default {
       api.updateUser(this, this.user)
 
       console.log('Redirecting to done...')
-      router.go('/checkout/done')
+      api.go('/checkout/done')
     }
   }
 

@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import {router} from '../main'
+import api from '../api'
 
 export default {
 
@@ -105,7 +105,7 @@ export default {
       window.localStorage.setItem('gst', this.gst)
 
       // route to checkout
-      router.go('/checkout')
+      api.go('/checkout')
     }
 
   },

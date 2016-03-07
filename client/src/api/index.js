@@ -1,6 +1,6 @@
-/**
- * Mocking client-server processing
- */
+
+import {router} from '../main'
+
 const API_LOC = 'http://localhost:3000/api'
 const STUDENTS_URL = API_LOC + '/students'
 
@@ -10,8 +10,9 @@ export default {
     authenticated: false
   },
 
-  // Vue.http.get('/someUrl', [data], [options]).then(successCallback, errorCallback);
-  // Vue.http.post('/someUrl', [data], [options]).then(successCallback, errorCallback);
+  go (location) {
+    router.go(location)
+  },
 
   getUser (context, uid) {
     var options = [{

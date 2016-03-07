@@ -8,12 +8,15 @@
       <a class="item" v-link="{ path: '/reload', activeClass: 'active' }">Reload</a>
     </div>
   </div>
+  <router-view></router-view>
+<!--
   <div class="pusher">
     <br/><br/><br/>
     <div class="ui container segment">
       <router-view></router-view>
     </div>
   </div>
+ -->
 </template>
 
 <script>

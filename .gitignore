@@ -21,3 +21,4 @@ _build/
 client/node_modules/
 client/dist/
 rebar.lock
+priv/dist/

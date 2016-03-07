@@ -64,7 +64,7 @@ handle_call({read}, _From, #state{fd=FD} = State) ->
     {ok, <<>>} ->
       {reply, ok, State};
     {ok, Data} ->
-      % ?DEBUG(">> ~p~n", [Data]),
+      ?DEBUG(">> ~p~n", [Data]),
       case binary:split(Data, <<"Value:  ">>) of
         <<>> ->
           {reply, ok, State};

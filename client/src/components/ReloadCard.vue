@@ -27,6 +27,11 @@
           <p>We're fetching the current balance for you</p>
         </div>
       </div>
+<!--
+      <div class="ui segment">
+        <pre>{{ $data | json }}</pre>
+      </div>
+ -->
     </div>
 
     <div class="eight wide column">
@@ -57,11 +62,12 @@
             <label>Reload Amount</label>
             <div class="ui left labeled input">
               <div class="ui label">RM </div>
-              <input type="text" placeholder="Amount">
-              <!-- <div class="ui right basic label">.00</div> -->
+              <input type="text" placeholder="Amount" v-model="amount">
+              <div class="ui right basic label">.00</div>
             </div>
           </div>
         </div>
+        <button class="ui button primary" v-on:click="reloadCard()">Reload</button>
       </div>
     </div>
   </div>
@@ -69,11 +75,14 @@
 
 <script>
 import api from '../api'
+import {router} from '../main'
 
 export default {
   data () {
     return {
       notice: true,
+      amount: 0.0,
+      error: null,
       user: {}
     }
   },
@@ -83,6 +92,16 @@ export default {
       this.uid = msg
       this.notice = false
       api.getUser(this, this.uid)
+    }
+  },
+
+  methods: {
+    reloadCard () {
+      console.log('Reloading user balance...')
+      this.user.balances += Number.parseFloat(this.amount + '.0')
+      api.updateUser(this, this.user)
+
+      router.go('/home')
     }
   }
 

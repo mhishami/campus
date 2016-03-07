@@ -19,7 +19,7 @@ init(_Transport, _Req, []) ->
   {upgrade, protocol, cowboy_rest}.
 
 allowed_methods(Req, State) ->
-  {[<<"GET">>, <<"POST">>, <<"OPTIONS">>], Req, State}.
+  {[<<"GET">>, <<"POST">>, <<"PUT">>, <<"OPTIONS">>], Req, State}.
 
 content_types_provided(Req, State) ->
   {[{{<<"application">>, <<"json">>, '*'}, handle_json}], Req, State}.
@@ -58,15 +58,44 @@ handle(<<"GET">>, [<<"api">>, <<"students">>, Uid], Req, State) ->
 handle(<<"POST">>, [<<"api">>, <<"students">>], Req, State) ->
   ?INFO("Handling POST req...", []),
   {ok, [{Json, true}], Req2} = cowboy_req:body_qs(Req),
-  Data = student_model:parse_req(jsx:decode(Json)),
+  % ?INFO("Json = ~p", [Json]),
+  case student_model:parse_req(jsx:decode(Json)) of
+    {ok, Student} ->
+      % % save the data
+      ?INFO("Saving student data ~p", [Student]),
+      student_model:save(Student),
+      Req3 = add_header(Req2),
+      {{true, maps:get(<<"_id">>, Student)}, Req3, State};
 
-  % % save the data
-  ?INFO("Saving ~p", [Data]),
-  student_model:save(Data),
+    {error, _Student} ->
+      ?ERROR("Error in saving student data..."),
+      Req3 = add_header(Req2),
+      {false, Req3, State}
 
-  % return the index
-  Req3 = add_header(Req2),
-  {{true, maps:get(<<"_id">>, Data)}, Req3, State};
+  end;
+
+  % % return the index
+  % Req3 = add_header(Req2),
+  % {{true, maps:get(<<"_id">>, Student)}, Req3, State};
+
+handle(<<"PUT">>, [<<"api">>, <<"students">>], Req, State) ->
+  ?INFO("Handling PUT req...", []),
+  {ok, [{Json, true}], Req2} = cowboy_req:body_qs(Req),
+
+  case student_model:parse_req(jsx:decode(Json)) of
+    {ok, Student} ->
+      % % save the data
+      ?INFO("Saving student data ~p", [Student]),
+      student_model:update(Student),
+      Req3 = add_header(Req2),
+      {true, Req3, State};
+
+    {error, _Student} ->
+      ?ERROR("Error in saving student data..."),
+      Req3 = add_header(Req2),
+      {false, Req3, State}
+
+  end;
 
 handle(Method, Path, Req, State) ->
   ?INFO("Unhandled req: ~p, ~p", [Method, Path]),

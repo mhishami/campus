@@ -32,8 +32,8 @@ export default {
         context.no_user = true
         context.can_add = true
       }
-    }).catch((err) => {
-      context.error = err
+    }).catch((error) => {
+      context.error = error
     })
   },
 
@@ -54,8 +54,26 @@ export default {
       // console.log('Response: ' + resp.data)
       context.result = resp.data
     })
-    // context.user = {}
-    // context.can_add = false
+  },
+
+  updateUser (context, user) {
+    var options = [{
+      method: 'PUT',
+      headers: [{
+        'Access-Control-Request-Method': 'PUT',
+        'Access-Control-Request-Headers': 'accept, authorization, crossorigin',
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      }]
+    }]
+    console.log('Sending the PUT request. User: ' + JSON.stringify(user))
+    context.$http.put(STUDENTS_URL, user, options).then((resp) => {
+      console.log('Response: ' + resp.data)
+      context.result = resp.data
+    }).catch((error) => {
+      console.log('UpdateUser: Error -> ' + error)
+      context.error = error
+    })
   }
 
 }

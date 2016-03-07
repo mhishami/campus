@@ -47,46 +47,83 @@
         </div>
       </div>
 
+      <div class="ui card" v-show="funds_ok">
+        <div class="content">
+          <div class="header">Card Transaction</div>
+        </div>
+        <div class="content">
+          <table class="ui table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Balance</td>
+                <td>{{ user.balances | currency 'RM '}}</td>
+              </tr>
+              <tr>
+                <td>This transaction</td>
+                <td>{{ total | currency 'RM ' }}</td>
+              </tr>
+              <tr>
+                <td>Balance After Transaction</td>
+                <td>{{ user.balances - total | currency 'RM ' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="extra content">
+          <button class="ui button primary" v-on:click="proceedPayment()">Pay</button>
+        </div>
+      </div>
+<!--
+      <div class="ui segment">
+        <pre>{{ $data | json }}</pre>
+      </div>
+ -->
     </div>
     <div class="eight wide column">
-    <div class="ui segment">
-      <table class="ui single line table">
-        <thead>
-          <tr>
-            <th>Item</th>
-            <th>Name</th>
-            <th>Unit Price</th>
-            <th>Quantity</th>
-            <th>Sub Total</th>
-          </tr>
-        </thead>
-        <tbody v-for="(index, item) in cart">
-          <tr>
-            <td>{{ index + 1 }}</td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.price | currency 'RM '}}</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price * item.quantity | currency 'RM '}}</td>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>GST</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>{{ gst | currency 'RM ' }}</td>
-          </tr>
-          <tr>
-            <td><h4>TOTAL</h4></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td><h4>{{ total | currency 'RM ' }}</h4></td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+      <div class="ui segment">
+        <table class="ui single line table">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Name</th>
+              <th>Unit Price</th>
+              <th>Quantity</th>
+              <th>Sub Total</th>
+            </tr>
+          </thead>
+          <tbody v-for="(index, item) in cart">
+            <tr>
+              <td>{{ index + 1 }}</td>
+              <td>{{ item.name }}</td>
+              <td>{{ item.price | currency 'RM '}}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.price * item.quantity | currency 'RM '}}</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>GST</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>{{ gst | currency 'RM ' }}</td>
+            </tr>
+            <tr>
+              <td><h4>TOTAL</h4></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td><h4>{{ total | currency 'RM ' }}</h4></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -94,7 +131,7 @@
 
 <script>
 import api from '../api'
-import router from '../main'
+import {router} from '../main'
 
 export default {
   data () {
@@ -102,7 +139,8 @@ export default {
       uid: null,
       notice: true,
       insuf_funds: false,
-      user: null
+      funds_ok: false,
+      user: {}
     }
   },
 
@@ -127,8 +165,10 @@ export default {
       api.getUser(this, this.uid)
 
       // check for the balance
-      if (this.user.balances <= this.total) {
+      if (this.user.balances < this.total) {
         this.insuf_funds = true
+      } else {
+        this.funds_ok = true
       }
     }
   },
@@ -136,6 +176,15 @@ export default {
   methods: {
     reloadCard () {
       router.go('/reload')
+    },
+
+    proceedPayment () {
+      // update the user balance
+      this.user.balances -= this.total
+      api.updateUser(this, this.user)
+
+      console.log('Redirecting to done...')
+      router.go('/checkout/done')
     }
   }
 

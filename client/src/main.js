@@ -6,6 +6,7 @@ import Checkin from './components/Checkin.vue'
 import Attendance from './components/Attendance.vue'
 import Cafe from './components/Cafe.vue'
 import CafeCheckout from './components/CafeCheckout.vue'
+import CafeCheckoutDone from './components/CafeCheckoutDone.vue'
 import ReloadCard from './components/ReloadCard.vue'
 
 import VueRouter from 'vue-router'
@@ -32,6 +33,9 @@ router.map({
   },
   '/checkout': {
     component: CafeCheckout
+  },
+  '/checkout/done': {
+    component: CafeCheckoutDone
   },
   '/reload': {
     component: ReloadCard

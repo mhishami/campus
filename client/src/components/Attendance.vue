@@ -1,4 +1,5 @@
 <template>
+<div class="pusher">
   <checkin-menu></checkin-menu>
   <div class="ui grid middle align stackable container">
     <h2 class="ui header">
@@ -9,6 +10,7 @@
     </h2>
     <line-chart></line-chart>
   </div>
+</div>
 </template>
 
 <script>

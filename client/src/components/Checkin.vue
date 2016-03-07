@@ -1,4 +1,5 @@
 <template>
+<div class="pusher">
   <checkin-menu></checkin-menu>
   <div class="ui grid middle align stackable container">
     <div class="six wide column">
@@ -24,6 +25,7 @@
       <user-view></user-view>
     </div>
   </div>
+</div>
 </template>
 
 <script>

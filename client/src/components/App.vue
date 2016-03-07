@@ -45,3 +45,10 @@ export default {
 }
 
 </script>
+
+<style>
+.pusher .container {
+  margin-top: 70px;
+}
+</style>
+

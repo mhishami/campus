@@ -1,4 +1,5 @@
 <template>
+<div class="pusher">
   <div class="ui grid middle align stackable container">
     <div class="ui ordered steps">
       <div class="active step">
@@ -71,6 +72,7 @@
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>

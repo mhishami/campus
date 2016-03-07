@@ -1,4 +1,5 @@
 <template>
+<div class="pusher">
   <div class="ui grid middle align stackable container">
     <div class="ui ordered steps">
       <div class="active step">
@@ -16,7 +17,7 @@
     </div>
   </div>
   <div class="ui grid middle align stackable container">
-    <div class="eight wide column">
+    <div class="ten wide column">
       <div class="ui grid">
         <product
           v-for="product in products"
@@ -26,11 +27,11 @@
         </product>
       </div>
     </div>
-    <div class="eight wide column">
+    <div class="six wide column">
       <cart></cart>
     </div>
   </div>
-
+</div>
 </template>
 
 <script>
@@ -72,3 +73,4 @@ export default {
 }
 
 </script>
+

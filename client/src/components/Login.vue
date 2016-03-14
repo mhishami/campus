@@ -22,7 +22,12 @@
                 <label>I agree to the Terms and Conditions</label>
               </div>
             </div>
-            <button class="ui button primary" v-on:click="login()" v-bind:disabled="is_invalid">Login</button>
+            <button class="ui button primary"
+                    v-on:click="login()"
+                    v-bind:disabled="is_invalid">
+              Login
+            </button>
+
           </form>
         </div>
         <div class="five wide column">

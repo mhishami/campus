@@ -55,10 +55,17 @@ handle(<<"GET">>, [<<"api">>, <<"students">>, Uid], Req, State) ->
   Req2 = add_header(Req),
   {jsx:encode(Res), Req2, State};
 
+handle(<<"GET">>, [<<"api">>, <<"students">>], Req, State) ->
+  ?INFO("handling GET all students"),
+  % Res = #{first => <<"Hisham">>, last => <<"Ismail">>},
+  Res = student_model:find_all(),
+  Req2 = add_header(Req),
+  {jsx:encode(Res), Req2, State};
+
 handle(<<"POST">>, [<<"api">>, <<"students">>], Req, State) ->
   ?INFO("Handling POST req...", []),
   {ok, [{Json, true}], Req2} = cowboy_req:body_qs(Req),
-  % ?INFO("Json = ~p", [Json]),
+  ?INFO("Json = ~p", [Json]),
   case student_model:parse_req(jsx:decode(Json)) of
     {ok, Student} ->
       % % save the data

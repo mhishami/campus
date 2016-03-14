@@ -68,7 +68,12 @@
             </div>
           </div>
         </div>
-        <button class="ui button primary" v-on:click="reloadCard()">Reload</button>
+        <button class="ui button primary"
+                v-on:click="reloadCard()"
+                v-bind:disabled="is_positive">
+          Reload
+        </button>
+
       </div>
     </div>
   </div>
@@ -82,9 +87,18 @@ export default {
   data () {
     return {
       notice: true,
-      amount: 0.0,
+      amount: 0,
       error: null,
       user: {}
+    }
+  },
+
+  computed: {
+    is_positive: function () {
+      if (this.amount > 0) {
+        return false
+      }
+      return true
     }
   },
 
@@ -99,7 +113,7 @@ export default {
   methods: {
     reloadCard () {
       console.log('Reloading user balance...')
-      this.user.balances += Number.parseFloat(this.amount + '.0')
+      this.user.balances += Number(this.amount)
       api.updateUser(this, this.user)
       api.go('/home')
     }

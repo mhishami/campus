@@ -52,27 +52,27 @@ update(Coll, Doc) when is_map(Doc) ->
   gen_server:call(?MODULE, {update, Coll, Doc}).
 
 -spec update(binary(), any(), any()) -> {ok, any()} | {error, any()}.
-update(Coll, Match, Doc) when is_map(Doc) ->
-  gen_server:call(?MODULE, {update, Coll, Match, Doc}).
+update(Coll, Selector, Doc) when is_map(Doc) ->
+  gen_server:call(?MODULE, {update, Coll, Selector, Doc}).
 
 -spec update(binary(), any(), any(), list()) -> {ok, any()} | {error, any()}.
-update(Coll, Match, Doc, Args) when is_map(Doc) ->
-  gen_server:call(?MODULE, {update, Coll, Match, Doc, Args}).
+update(Coll, Selector, Doc, Projector) when is_map(Doc) ->
+  gen_server:call(?MODULE, {update, Coll, Selector, Doc, Projector}).
 
 -spec find_one(binary(), any()) -> {ok, any()} | {error, any()}.
-find_one(Coll, Match) ->
-  gen_server:call(?MODULE, {find_one, Coll, Match}).
+find_one(Coll, Selector) ->
+  gen_server:call(?MODULE, {find_one, Coll, Selector}).
 
 % Example:
 % mongo_worker:find(<<"posts">>, {}, [{batchsize, 1}, {skip, 1}]).
 %
 -spec find_one(binary(), any(), list()) -> {ok, any()} | {error, any()}.
-find_one(Coll, Match, Args) ->
-  gen_server:call(?MODULE, {find_one, Coll, Match, Args}).
+find_one(Coll, Selector, Projector) ->
+  gen_server:call(?MODULE, {find_one, Coll, Selector, Projector}).
 
 -spec find(binary(), any()) -> {ok, any()}.
-find(Coll, Match) ->
-  gen_server:call(?MODULE, {find, Coll, Match, #{}}).
+find(Coll, Selector) ->
+  gen_server:call(?MODULE, {find, Coll, Selector, #{}}).
 
 % Example
 % mongo_worker:find(<<"posts">>, {}, [{batchsize, 3}, {skip, 1},
@@ -83,48 +83,48 @@ find(Coll, Match) ->
 % ]).
 
 -spec find(binary(), any(), list()) -> {ok, any()}.
-find(Coll, Match, Args) ->
-  gen_server:call(?MODULE, {find, Coll, Match, Args}).
+find(Coll, Selector, Projector) ->
+  gen_server:call(?MODULE, {find, Coll, Selector, Projector}).
 
 -spec match(binary(), any(), any()) -> {ok, any()}.
-match(Coll, Match, Sort) ->
-  gen_server:call(?MODULE, {match, Coll, Match, Sort}).
+match(Coll, Selector, Sort) ->
+  gen_server:call(?MODULE, {match, Coll, Selector, Sort}).
 
 -spec match(binary(), any(), any(), byte()) -> {ok, any()}.
-match(Coll, Match, Sort, Limit) ->
-  gen_server:call(?MODULE, {match, Coll, Match, Sort, Limit}).
+match(Coll, Selector, Sort, Limit) ->
+  gen_server:call(?MODULE, {match, Coll, Selector, Sort, Limit}).
 
 -spec match(binary(), any(), any(), byte(), byte()) -> {ok, any()}.
-match(Coll, Match, Sort, Skip, Limit) ->
-  gen_server:call(?MODULE, {match, Coll, Match, Sort, Skip, Limit}).
+match(Coll, Selector, Sort, Skip, Limit) ->
+  gen_server:call(?MODULE, {match, Coll, Selector, Sort, Skip, Limit}).
 
--spec match_group(Coll::binary(), Match::any(), Group::any()) -> {ok, any()}.
-match_group(Coll, Match, Group) ->
-  gen_server:call(?MODULE, {match_group, Coll, Match, Group}).
+-spec match_group(Coll::binary(), Selector::any(), Group::any()) -> {ok, any()}.
+match_group(Coll, Selector, Group) ->
+  gen_server:call(?MODULE, {match_group, Coll, Selector, Group}).
 
--spec match_group(Coll::binary(), Match::any(), Group::any(), Sort::any()) -> {ok, any()}.
-match_group(Coll, Match, Group, Sort) ->
-  gen_server:call(?MODULE, {match_group, Coll, Match, Group, Sort}).
+-spec match_group(Coll::binary(), Selector::any(), Group::any(), Sort::any()) -> {ok, any()}.
+match_group(Coll, Selector, Group, Sort) ->
+  gen_server:call(?MODULE, {match_group, Coll, Selector, Group, Sort}).
 
--spec match_group(Coll::binary(), Match::any(), Project::any(), Group::any(), Sort::any()) -> {ok, any()}.
-match_group(Coll, Match, Project, Group, Sort) ->
-  gen_server:call(?MODULE, {match_group, Coll, Match, Project, Group, Sort}).
+-spec match_group(Coll::binary(), Selector::any(), Project::any(), Group::any(), Sort::any()) -> {ok, any()}.
+match_group(Coll, Selector, Project, Group, Sort) ->
+  gen_server:call(?MODULE, {match_group, Coll, Selector, Project, Group, Sort}).
 
 -spec delete(binary(), any()) -> {ok, any()} | {error, any()}.
-delete(Coll, Match) ->
-  gen_server:call(?MODULE, {delete, Coll, Match}).
+delete(Coll, Selector) ->
+  gen_server:call(?MODULE, {delete, Coll, Selector}).
 
 -spec delete_one(binary(), any()) -> {ok, any()} | {error, any()}.
-delete_one(Coll, Match) ->
-  gen_server:call(?MODULE, {delete_one, Coll, Match}).
+delete_one(Coll, Selector) ->
+  gen_server:call(?MODULE, {delete_one, Coll, Selector}).
 
 -spec count(binary(), any()) -> {ok, any()} | {error, any()}.
-count(Coll, Match) ->
-  gen_server:call(?MODULE, {count, Coll, Match, 0}).
+count(Coll, Selector) ->
+  gen_server:call(?MODULE, {count, Coll, Selector, 0}).
 
 -spec count(binary(), any(), byte()) -> {ok, any()} | {error, any()}.
-count(Coll, Match, Limit) ->
-  gen_server:call(?MODULE, {count, Coll, Match, Limit}).
+count(Coll, Selector, Limit) ->
+  gen_server:call(?MODULE, {count, Coll, Selector, Limit}).
 
 -spec ensure_index(binary(), any()) -> any().
 ensure_index(Coll, IndexSpec) ->
@@ -163,30 +163,30 @@ handle_call({update, Coll, Doc}, _From, #state{pool=Pool} = State) ->
           end),
   {reply, Reply, State};
 
-handle_call({update, Coll, Match, Doc}, _From, #state{pool=Pool} = State) ->
+handle_call({update, Coll, Selector, Doc}, _From, #state{pool=Pool} = State) ->
     Reply = poolboy:transaction(Pool,
             fun(Conn) ->
-                case catch mc_worker_api:update(Conn, Coll, Match, Doc) of
+                case catch mc_worker_api:update(Conn, Coll, Selector, Doc) of
                     {'EXIT', Error} -> {error, Error};
                     Else -> {ok, Else}
                 end
             end),
     {reply, Reply, State};
 
-handle_call({update, Coll, Match, Doc, Args}, _From, #state{pool=Pool} = State) ->
+handle_call({update, Coll, Selector, Doc, Projector}, _From, #state{pool=Pool} = State) ->
     Reply = poolboy:transaction(Pool,
             fun(Conn) ->
-                case catch mc_worker_api:update(Conn, Coll, Match, Doc, Args) of
+                case catch mc_worker_api:update(Conn, Coll, Selector, Doc, Projector) of
                     {'EXIT', Error} -> {error, Error};
                     Else -> {ok, Else}
                 end
             end),
     {reply, Reply, State};
 
-handle_call({find_one, Coll, Match}, _From, #state{pool=Pool} = State) ->
+handle_call({find_one, Coll, Selector}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
-                mc_worker_api:find_one(Conn, Coll, Match)
+                mc_worker_api:find_one(Conn, Coll, Selector)
             end),
     Reply = case maps:size(Res) of
                 0 -> {error, not_found};
@@ -194,10 +194,10 @@ handle_call({find_one, Coll, Match}, _From, #state{pool=Pool} = State) ->
             end,
     {reply, Reply, State};
 
-handle_call({find_one, Coll, Match, Args}, _From, #state{pool=Pool} = State) ->
+handle_call({find_one, Coll, Selector, Projector}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
-                mc_worker_api:find_one(Conn, Coll, Match, Args)
+                mc_worker_api:find_one(Conn, Coll, Selector, Projector)
             end),
     Reply = case maps:size(Res) of
                 0 -> {error, not_found};
@@ -209,34 +209,35 @@ handle_call({find_one, Coll, Match, Args}, _From, #state{pool=Pool} = State) ->
 %   {<<"title">>, #{<<"$regex">>  => <<"some*">>, <<"$options">> => <<"i">>}},
 %   [{projector, #{<<"grpid">> => 1, <<"title">> => 1, <<"author.fullname">> => 1}}]).
 %
-handle_call({find, Coll, Match, Args}, _From, #state{pool=Pool} = State) ->
+handle_call({find, Coll, Selector, Projector}, _From, #state{pool=Pool} = State) ->
+    ?INFO("Coll: ~p, Selector: ~p, Projector: ~p", [Coll, Selector, Projector]),
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
-                Cursor = mc_worker_api:find(Conn, Coll, Match, Args),
+                Cursor = mc_worker_api:find(Conn, Coll, Selector, Projector),
                 Results = mc_cursor:rest(Cursor),
                 mc_cursor:close(Cursor),
                 Results
             end),
     {reply, {ok, Res}, State};
 
-handle_call({match, Coll, Match, Sort}, _From, #state{pool=Pool} = State) ->
+handle_call({match, Coll, Selector, Sort}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$sort">>, Sort}
                     ]}),
                 Results
             end),
     {reply, {ok, Res}, State};
 
-handle_call({match, Coll, Match, Sort, Limit}, _From, #state{pool=Pool} = State) ->
+handle_call({match, Coll, Selector, Sort, Limit}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$sort">>, Sort},
                         {<<"$limit">>, Limit}
                     ]}),
@@ -245,12 +246,12 @@ handle_call({match, Coll, Match, Sort, Limit}, _From, #state{pool=Pool} = State)
 
     {reply, {ok, Res}, State};
 
-handle_call({match, Coll, Match, Sort, Skip, Limit}, _From, #state{pool=Pool} = State) ->
+handle_call({match, Coll, Selector, Sort, Skip, Limit}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$sort">>, Sort},
                         {<<"$skip">>, Skip},
                         {<<"$limit">>, Limit}
@@ -260,24 +261,24 @@ handle_call({match, Coll, Match, Sort, Skip, Limit}, _From, #state{pool=Pool} = 
 
     {reply, {ok, Res}, State};
 
-handle_call({match_group, Coll, Match, Group}, _From, #state{pool=Pool} = State) ->
+handle_call({match_group, Coll, Selector, Group}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$group">>, Group}
                     ]}),
                 Results
             end),
     {reply, {ok, Res}, State};
 
-handle_call({match_group, Coll, Match, Group, Sort}, _From, #state{pool=Pool} = State) ->
+handle_call({match_group, Coll, Selector, Group, Sort}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$group">>, Group},
                         {<<"$sort">>, Sort}
                     ]}),
@@ -285,12 +286,12 @@ handle_call({match_group, Coll, Match, Group, Sort}, _From, #state{pool=Pool} = 
             end),
     {reply, {ok, Res}, State};
 
-handle_call({match_group, Coll, Match, Project, Group, Sort}, _From, #state{pool=Pool} = State) ->
+handle_call({match_group, Coll, Selector, Project, Group, Sort}, _From, #state{pool=Pool} = State) ->
     Res = poolboy:transaction(Pool,
             fun(Conn) ->
                 {true, #{<<"result">> := Results}} = mc_worker_api:command(Conn,
                     {<<"aggregate">>, Coll, <<"pipeline">>, [
-                        {<<"$match">>, Match},
+                        {<<"$match">>, Selector},
                         {<<"$project">>, Project},
                         {<<"$group">>, Group},
                         {<<"$sort">>, Sort}
@@ -299,24 +300,24 @@ handle_call({match_group, Coll, Match, Project, Group, Sort}, _From, #state{pool
             end),
     {reply, {ok, Res}, State};
 
-handle_call({delete, Coll, Match}, _From, #state{pool=Pool} = State) ->
+handle_call({delete, Coll, Selector}, _From, #state{pool=Pool} = State) ->
     Reply = poolboy:transaction(Pool,
             fun(Conn) ->
-                mc_worker_api:delete(Conn, Coll, Match)
+                mc_worker_api:delete(Conn, Coll, Selector)
             end),
     {reply, {ok, Reply}, State};
 
-handle_call({delete_one, Coll, Match}, _From, #state{pool=Pool} = State) ->
+handle_call({delete_one, Coll, Selector}, _From, #state{pool=Pool} = State) ->
     Reply = poolboy:transaction(Pool,
             fun(Conn) ->
-                mc_worker_api:delete_one(Conn, Coll, Match)
+                mc_worker_api:delete_one(Conn, Coll, Selector)
             end),
     {reply, {ok, Reply}, State};
 
-handle_call({count, Coll, Match, Limit}, _From, #state{pool=Pool} = State) ->
+handle_call({count, Coll, Selector, Limit}, _From, #state{pool=Pool} = State) ->
     Reply = poolboy:transaction(Pool,
             fun(Conn) ->
-                mc_worker_api:count(Conn, Coll, Match, Limit)
+                mc_worker_api:count(Conn, Coll, Selector, Limit)
             end),
     {reply, {ok, Reply}, State};
 

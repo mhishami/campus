@@ -116,10 +116,10 @@ export default {
 
   methods: {
     addUser () {
-      this.can_add = false
-      this.no_user = false
+      // this.can_add = false
+      // this.no_user = false
+      console.log('UserView: user = ' + JSON.stringify(this.user))
       api.addUser(this, this.uid, this.user)
-      this.user = {}
     }
   }
 

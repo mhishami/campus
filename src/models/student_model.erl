@@ -3,11 +3,12 @@
 
 -export ([new/0,
           new/9,
-          new/12,
+          new/11,
           parse_req/1,
           save/1,
           update/1,
           find/1,
+          find_all/0,
           ensure_index/0]).
 
 -define (DB, <<"students">>).
@@ -33,7 +34,7 @@ new(Uid, FirstName, LastName, Address1, Address2, City, Postcode, IdNum, Student
     <<"created_at">> => os:timestamp(),
     <<"updated_at">> => os:timestamp()}.
 
-new(Id, Uid, FirstName, LastName, Address1, Address2, City, Postcode, IdNum, StudentNum, Balances, Updated) ->
+new(Id, Uid, FirstName, LastName, Address1, Address2, City, Postcode, IdNum, StudentNum, Balances) ->
   #{<<"_id">> => Id,
     <<"card_uid">> => Uid,
     <<"first">> => FirstName,
@@ -60,8 +61,7 @@ parse_req(PostVals) ->
       proplists:get_value(<<"postcode">>, PostVals, <<"">>),
       proplists:get_value(<<"id_num">>, PostVals, <<"">>),
       proplists:get_value(<<"student_num">>, PostVals, <<"">>),
-      proplists:get_value(<<"balances">>, PostVals, 0.0),
-      os:timestamp()
+      proplists:get_value(<<"balances">>, PostVals, 0.0)
   ),
   case validate(Student) of
     ok -> {ok, Student};
@@ -78,6 +78,12 @@ find(UID) ->
   case mongo_worker:find_one(?DB, {<<"card_uid">>, UID}, #{}) of
     {error, _} -> [];
     {ok, Student} -> format_ts(Student)
+  end.
+
+find_all() ->
+  case mongo_worker:find(?DB, {}) of
+    {error, _} -> [];
+    {ok, Students} -> [format_ts(S) || S <- Students ]
   end.
 
 ensure_index() ->

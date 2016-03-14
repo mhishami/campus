@@ -77,7 +77,7 @@
           </table>
         </div>
         <div class="extra content">
-          <button class="ui button primary" v-on:click="proceedPayment()">Pay</button>
+          <button class="ui button primary" v-on:click="proceedPayment()" :disabled="insuf_funds">Pay</button>
         </div>
       </div>
 <!--

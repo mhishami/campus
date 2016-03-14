@@ -44,7 +44,9 @@
   </table>
   <div class="ui divider"></div>
   <div class="ui left action input">
-    <button v-on:click="checkout" class="ui teal labeled icon button">
+    <button class="ui teal labeled icon button"
+            v-on:click="checkout"
+            v-bind:disabled="is_positive">
       <i class="cart icon"></i>
       Checkout
     </button>
@@ -79,6 +81,13 @@ export default {
 
     total: function () {
       return this.gst + this.subtotal
+    },
+
+    is_positive: function () {
+      if (this.total > 0) {
+        return false
+      }
+      return true
     }
   },
 

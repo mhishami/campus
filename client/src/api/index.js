@@ -15,6 +15,20 @@ export default {
     router.go(location)
   },
 
+  initUser () {
+    return {
+      first: '',
+      last: '',
+      address1: '',
+      address2: '',
+      city: '',
+      postcode: '',
+      id_num: '',
+      student_num: '',
+      card_uid: ''
+    }
+  },
+
   options (opt) {
     return [{
       method: opt,
@@ -37,26 +51,28 @@ export default {
 
   getUser (context, uid) {
     context.$http.get(STUDENTS_URL + '/' + uid, this.options('GET')).then((resp) => {
-      context.user = resp.data
-
       if (JSON.stringify(resp.data) !== '[]') {
+        context.user = resp.data
         context.no_user = false
         context.can_add = false
       } else {
+        context.user = this.initUser()
         context.no_user = true
         context.can_add = true
       }
     }).catch((error) => {
+      console.log('API: error = ' + error)
+      context.user = this.initUser()
       context.error = error
     })
   },
 
   addUser (context, uid, user) {
-    // console.log('User: ' + JSON.stringify(user))
-    console.log('Sending the post request...')
+    console.log('User: ' + JSON.stringify(user))
     user.card_uid = uid
+    console.log('Sending the post request: ' + JSON.stringify(user))
     context.$http.post(STUDENTS_URL, user, this.options('POST')).then((resp) => {
-      // console.log('Response: ' + resp.data)
+      console.log('Response: ' + resp.data)
       context.result = resp.data
     })
   },
